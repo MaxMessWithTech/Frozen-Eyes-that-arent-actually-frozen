@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.1.0
+ * @version 1.1.1
  * @date Febuary 13th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -92,6 +92,9 @@ bool openEye(int open_pos, int close_steps, int close_step_value, int step_time)
 
 void ISR_en_btn_pressed(void);
 
+/**
+ * Arduino Setup Function
+ */
 void setup() {
 	leftEye.attach(LEFT_EYE_PIN);
 	rightEye.attach(RIGHT_EYE_PIN);
@@ -110,6 +113,10 @@ void setup() {
 
 }
 
+
+/**
+ * Arduino Loop Function
+ */
 void loop() {
 	if (!isEnabled()) { return; }
 	// If it is time to blink, then blink
@@ -135,18 +142,32 @@ void loop() {
 	}
 }
 
+
+/**
+ * Is Enables
+ * @returns if the system is enabled
+ */
 bool isEnabled(void) {
 	return enable;
 }
 
+/**
+ * Is is time to blink?
+ */
 bool timeToBlink(void) {
 	return millis() > next_blink_ms;
 }
 
+/**
+ * Get Potentiometer Value
+ */
 int getPotVal(void) {
 	return analogRead(SPEED_POT_PIN);
 }
 
+/**
+ * Close Eye Sequence
+ */
 bool closeEye(int closed_pos, int open_steps, int open_step_value, int step_time) {
 	for(i = 0; i < OPEN_STEPS - 1; i++) {
 		// Write the next step to the servos
@@ -163,6 +184,10 @@ bool closeEye(int closed_pos, int open_steps, int open_step_value, int step_time
 	return true;
 }
 
+
+/**
+ * Open Eye sequence
+ */
 bool openEye(int open_pos, int close_steps, int close_step_value, int step_time) {
 	for(i = 0; i < close_steps - 1; i++) {
 		leftEye.write(open_pos + i * close_step_value);
@@ -178,6 +203,10 @@ bool openEye(int open_pos, int close_steps, int close_step_value, int step_time)
 	return true;
 }
 
+
+/**
+ * Enable Button interupt
+ */
 void ISR_en_btn_pressed(void) {
 	unsigned long interrupt_time = millis();
 
