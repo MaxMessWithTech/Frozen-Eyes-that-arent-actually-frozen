@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.1.2
+ * @version 1.1.3
  * @date Febuary 13th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -29,6 +29,8 @@
 // CHANGE HOW FAR THE SERVO WILL MOVE
 #define CLOSED_POS 0
 #define OPEN_POS 100
+
+// UNCOMMENT if the left/right servos need to be reversed 
 #define LEFT_SERVO_REVERSE
 // #define RIGHT_SERVO_REVERSE
 
