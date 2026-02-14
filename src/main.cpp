@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.1.3
+ * @version 1.1.4
  * @date Febuary 13th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -123,7 +123,20 @@ void setup() {
  * Arduino Loop Function
  */
 void loop() {
-	if (!isEnabled()) { return; }
+	if (!isEnabled()) { 
+		#ifdef LEFT_SERVO_REVERSE
+			rightEye.write(OPEN_POS);
+		#else
+			rightEye.write(CLOSE_STEPS);
+		#endif
+
+		#ifdef RIGHT_SERVO_REVERSE
+			leftEye.write(CLOSED_POS);
+		#else
+			leftEye.write(OPEN_POS);
+		#endif
+		return; 
+	}
 	// If it is time to blink, then blink
 	if (timeToBlink()) {
 
