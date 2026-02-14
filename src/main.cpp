@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.0
+ * @version 1.2.1
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -145,6 +145,8 @@ void loop() {
 		EEPROM.put(HOME_R_ADR, right_offset);
 		EEPROM.put(SPEED_ADR, speed_offset);
 	}
+
+	displayLEDs();
 
 	if (!isEnabled()) { 
 		#ifdef LEFT_SERVO_REVERSE
