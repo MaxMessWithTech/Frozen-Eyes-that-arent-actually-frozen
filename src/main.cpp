@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.1.1
+ * @version 1.1.2
  * @date Febuary 13th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -29,11 +29,14 @@
 // CHANGE HOW FAR THE SERVO WILL MOVE
 #define CLOSED_POS 0
 #define OPEN_POS 100
+#define LEFT_SERVO_REVERSE
+// #define RIGHT_SERVO_REVERSE
 
 // CHANGE TIMING ON EACH BLINK
-#define OPENING_TIME 200
-#define CLOSED_TIME 50
-#define CLOSING_TIME 200
+#define OPENING_TIME 500
+#define CLOSED_TIME 200
+#define CLOSING_TIME 500
+#define EYE_DELTA (OPEN_POS - CLOSED_POS)
 
 // DO NOT MODIFY UNLESS YOU'RE ABSOLUTLY SURE
 // Changes the time between the loops, 
@@ -44,12 +47,12 @@
 // DO NOT MODIFY
 #define OPEN_STEPS (OPENING_TIME / STEP_TIME)
 // DO NOT MODIFY
-#define OPEN_STEP_VALUE ((OPEN_POS - CLOSED_POS) / OPEN_STEPS)
+#define OPEN_STEP_VALUE (EYE_DELTA / OPEN_STEPS)
 
 // DO NOT MODIFY
 #define CLOSE_STEPS (CLOSING_TIME / STEP_TIME)
 // DO NOT MODIFY
-#define CLOSE_STEP_VALUE ((OPEN_POS - CLOSED_POS) / CLOSE_STEPS)
+#define CLOSE_STEP_VALUE (EYE_DELTA / CLOSE_STEPS)
 
 
 // Should the btn be pulled up or down to enable
@@ -87,8 +90,8 @@ bool isEnabled(void);
 bool timeToBlink(void);
 int getPotVal(void);
 
-bool closeEye(int closed_pos, int open_steps, int open_step_value, int step_time);
-bool openEye(int open_pos, int close_steps, int close_step_value, int step_time);
+bool closeEye();
+bool openEye();
 
 void ISR_en_btn_pressed(void);
 
@@ -123,13 +126,13 @@ void loop() {
 	if (timeToBlink()) {
 
 		// Close Eye Lid
-		closeEye(CLOSED_POS, OPEN_STEPS, OPEN_STEP_VALUE, STEP_TIME);
+		closeEye();
 
 		// Stay closed for CLOSED_TIME
 		delay(CLOSED_TIME);
 
 
-		openEye(OPEN_POS, CLOSE_STEPS, CLOSE_STEP_VALUE, STEP_TIME);
+		openEye();
 
 		potVal = getPotVal();
 
@@ -166,39 +169,76 @@ int getPotVal(void) {
 }
 
 /**
- * Close Eye Sequence
+ * Open Eye Sequence
  */
-bool closeEye(int closed_pos, int open_steps, int open_step_value, int step_time) {
+bool openEye() {
 	for(i = 0; i < OPEN_STEPS - 1; i++) {
 		// Write the next step to the servos
-		leftEye.write(CLOSED_POS + i * OPEN_STEP_VALUE);
-		rightEye.write(CLOSED_POS + i * OPEN_STEP_VALUE);
+		#ifdef LEFT_SERVO_REVERSE
+			leftEye.write(OPEN_STEPS - i * OPEN_STEP_VALUE);
+		#else
+			leftEye.write(CLOSED_POS + i * OPEN_STEP_VALUE);
+		#endif
+
+		#ifdef RIGHT_SERVO_REVERSE
+			rightEye.write(OPEN_STEPS - i * OPEN_STEP_VALUE);
+		#else
+			rightEye.write(CLOSED_POS + i * OPEN_STEP_VALUE);
+		#endif
 		
 		delay(STEP_TIME);
 	}
 
-	// Fully closed
-	leftEye.write(CLOSED_POS);
-	rightEye.write(CLOSED_POS);
+	// Fully open
+	#ifdef LEFT_SERVO_REVERSE
+		leftEye.write(CLOSED_POS);
+	#else
+		leftEye.write(OPEN_POS);
+	#endif
+
+	#ifdef RIGHT_SERVO_REVERSE
+		rightEye.write(CLOSED_POS);
+	#else
+		rightEye.write(OPEN_POS);
+	#endif
 
 	return true;
 }
 
 
 /**
- * Open Eye sequence
+ * Close Eye sequence
  */
-bool openEye(int open_pos, int close_steps, int close_step_value, int step_time) {
-	for(i = 0; i < close_steps - 1; i++) {
-		leftEye.write(open_pos + i * close_step_value);
-		rightEye.write(open_pos + i * close_step_value);
+bool closeEye() {
+	for(i = 0; i < CLOSE_STEPS - 1; i++) {
+		// Write the next step to the servos
+		#ifdef LEFT_SERVO_REVERSE
+			leftEye.write(CLOSED_POS + i * CLOSE_STEP_VALUE);
+		#else
+			leftEye.write(OPEN_POS - i * CLOSE_STEP_VALUE);
+		#endif
 
-		delay(step_time);
+		#ifdef RIGHT_SERVO_REVERSE
+			rightEye.write(CLOSED_POS + i * CLOSE_STEP_VALUE);
+		#else
+			rightEye.write(OPEN_POS - i * CLOSE_STEP_VALUE);
+		#endif
+
+		delay(STEP_TIME);
 	}
 
-	// Fully open
-	leftEye.write(open_pos);
-	rightEye.write(open_pos);
+	// Fully closed
+	#ifdef LEFT_SERVO_REVERSE
+		rightEye.write(OPEN_POS);
+	#else
+		rightEye.write(CLOSE_STEPS);
+	#endif
+
+	#ifdef RIGHT_SERVO_REVERSE
+		leftEye.write(CLOSED_POS);
+	#else
+		leftEye.write(OPEN_POS);
+	#endif
 
 	return true;
 }
