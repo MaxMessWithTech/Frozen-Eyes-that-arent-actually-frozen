@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.4
+ * @version 1.2.5
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -150,6 +150,18 @@ void loop() {
 		EEPROM.put(SPEED_ADR, speed_offset);
 	}
 
+	potVal = getPotVal();
+
+	if (mode == CHANGE_SPEED) {
+		speed_offset = potVal;
+	}
+	if (mode == CHANGE_L_HOME) {
+		left_offset = (potVal - 512) / 32;
+	}
+	if (mode == CHANGE_R_HOME) {
+		right_offset = (potVal - 512) / 32;
+	}
+
 	displayLEDs();
 
 	if (!isEnabled()) { 
@@ -169,18 +181,6 @@ void loop() {
 
 	// If it is time to blink, then blink
 	if (timeToBlink()) {
-
-		potVal = getPotVal();
-
-		if (mode == CHANGE_SPEED) {
-			speed_offset = potVal;
-		}
-		if (mode == CHANGE_L_HOME) {
-			left_offset = (potVal - 512) / 32;
-		}
-		if (mode == CHANGE_R_HOME) {
-			right_offset = (potVal - 512) / 32;
-		}
 
 		// Close Eye Lid
 		closeEye();
