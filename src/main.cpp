@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.8
+ * @version 1.3.0
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -29,7 +29,7 @@
 
 
 #define POT_MOD 		5				// Change how much of an effect the potenitometer has
-#define MIN_BLINK_TIME 	500				// Minimum time between blinks
+#define MIN_BLINK_TIME 	2000			// Minimum time between blinks
 
 #define CLOSED_POS 		15				// Default Closed Position in degrees
 #define OPEN_POS 		165				// Default Open Position in degrees
@@ -191,7 +191,7 @@ void loop() {
 		// This line creates a random amount of time (in milliseconds) until the next blink
 		// The smallest number is MIN_BLINK_TIME + potVal
 		// The largest number is (MIN_BLINK_TIME + 1) + (POT_MOD * potVal)
-		int rand_delta = random(MIN_BLINK_TIME + speed_offset, (MIN_BLINK_TIME + 1) + (POT_MOD * speed_offset));
+		int rand_delta = random(MIN_BLINK_TIME + speed_offset, (MIN_BLINK_TIME  + speed_offset + 1) + (POT_MOD * speed_offset));
 		
 		#ifdef DEBUG
 		Serial.print("Next Blink will be in ");
