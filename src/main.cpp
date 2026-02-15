@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.6
+ * @version 1.2.7
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -55,10 +55,10 @@
 #define EN_BTN_MOMENTARY
 
 #define EYE_DELTA (OPEN_POS - CLOSED_POS)
-#define OPEN_STEPS (OPENING_TIME / STEP_TIME)
-#define OPEN_STEP_VALUE (EYE_DELTA / OPEN_STEPS)
-#define CLOSE_STEPS (CLOSING_TIME / STEP_TIME)
-#define CLOSE_STEP_VALUE (EYE_DELTA / CLOSE_STEPS)
+#define OPEN_STEPS ((double)OPENING_TIME / STEP_TIME)
+#define OPEN_STEP_VALUE ((double)EYE_DELTA / OPEN_STEPS)
+#define CLOSE_STEPS ((double)CLOSING_TIME / STEP_TIME)
+#define CLOSE_STEP_VALUE ((double)EYE_DELTA / CLOSE_STEPS)
 
 #define HOME_L_ADR		0
 #define HOME_R_ADR		HOME_L_ADR + sizeof(int)
@@ -159,13 +159,13 @@ void loop() {
 	displayLEDs();
 
 	if (!isEnabled()) {
-		#ifdef LEFT_SERVO_REVERSE
+		#ifdef RIGHT_SERVO_REVERSE
 			rightEye.write(OPEN_POS + right_offset);
 		#else
 			rightEye.write(CLOSED_POS + right_offset);
 		#endif
 
-		#ifdef RIGHT_SERVO_REVERSE
+		#ifdef LEFT_SERVO_REVERSE
 			leftEye.write(OPEN_POS + left_offset);
 		#else
 			leftEye.write(CLOSED_POS + left_offset);
@@ -258,15 +258,15 @@ bool openEye() {
 	for(i = 0; i < OPEN_STEPS - 1; i++) {
 		// Write the next step to the servos
 		#ifdef LEFT_SERVO_REVERSE
-			leftEye.write(OPEN_STEPS - i * OPEN_STEP_VALUE + left_offset);
+			leftEye.write((OPEN_POS + left_offset) - i * OPEN_STEP_VALUE);
 		#else
-			leftEye.write(CLOSED_POS + i * OPEN_STEP_VALUE + left_offset);
+			leftEye.write((CLOSED_POS + left_offset) + i * OPEN_STEP_VALUE);
 		#endif
 
 		#ifdef RIGHT_SERVO_REVERSE
-			rightEye.write(OPEN_STEPS - i * OPEN_STEP_VALUE + right_offset);
+			rightEye.write((OPEN_POS + right_offset) - i * OPEN_STEP_VALUE);
 		#else
-			rightEye.write(CLOSED_POS + i * OPEN_STEP_VALUE + right_offset);
+			rightEye.write((CLOSED_POS + right_offset) + i * OPEN_STEP_VALUE);
 		#endif
 		
 		delay(STEP_TIME);
@@ -296,15 +296,15 @@ bool closeEye() {
 	for(i = 0; i < CLOSE_STEPS - 1; i++) {
 		// Write the next step to the servos
 		#ifdef LEFT_SERVO_REVERSE
-			leftEye.write(CLOSED_POS + i * CLOSE_STEP_VALUE + left_offset);
+			leftEye.write((CLOSED_POS + left_offset) + i * CLOSE_STEP_VALUE);
 		#else
-			leftEye.write(OPEN_POS - i * CLOSE_STEP_VALUE + left_offset);
+			leftEye.write((OPEN_POS + left_offset) - i * CLOSE_STEP_VALUE);
 		#endif
 
 		#ifdef RIGHT_SERVO_REVERSE
-			rightEye.write(CLOSED_POS + i * CLOSE_STEP_VALUE + right_offset);
+			rightEye.write((CLOSED_POS + right_offset) + i * CLOSE_STEP_VALUE);
 		#else
-			rightEye.write(OPEN_POS - i * CLOSE_STEP_VALUE + right_offset);
+			rightEye.write((OPEN_POS + right_offset) - i * CLOSE_STEP_VALUE);
 		#endif
 
 		delay(STEP_TIME);
