@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.5
+ * @version 1.2.6
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -14,6 +14,8 @@
 
 // ----------------  DEFINITIONS  ----------------
 // ------ THIS IS WHERE YOU CHANGE SETTINGS ------
+
+#define DEBUG
 
 // PINS
 #define LEFT_EYE_PIN 	DD6				// Left Eye Servo
@@ -29,8 +31,8 @@
 #define POT_MOD 		5				// Change how much of an effect the potenitometer has
 #define MIN_BLINK_TIME 	500				// Minimum time between blinks
 
-#define CLOSED_POS 		0				// Default Closed Position in degrees
-#define OPEN_POS 		150				// Default Open Position in degrees
+#define CLOSED_POS 		15				// Default Closed Position in degrees
+#define OPEN_POS 		165				// Default Open Position in degrees
 
 // UNCOMMENT if the left/right servos need to be reversed 
 #define LEFT_SERVO_REVERSE
@@ -110,6 +112,8 @@ void ISR_mode_btn_pressed(void);
  * Arduino Setup Function
  */
 void setup() {
+	Serial.begin(9600);
+
 	// Load Previous Trims
 	EEPROM.get(HOME_L_ADR, left_offset);
 	EEPROM.get(HOME_R_ADR, right_offset);
@@ -152,19 +156,9 @@ void loop() {
 
 	potVal = getPotVal();
 
-	if (mode == CHANGE_SPEED) {
-		speed_offset = potVal;
-	}
-	if (mode == CHANGE_L_HOME) {
-		left_offset = (potVal - 512) / 32;
-	}
-	if (mode == CHANGE_R_HOME) {
-		right_offset = (potVal - 512) / 32;
-	}
-
 	displayLEDs();
 
-	if (!isEnabled()) { 
+	if (!isEnabled()) {
 		#ifdef LEFT_SERVO_REVERSE
 			rightEye.write(OPEN_POS + right_offset);
 		#else
@@ -181,7 +175,10 @@ void loop() {
 
 	// If it is time to blink, then blink
 	if (timeToBlink()) {
-
+		#ifdef DEBUG
+		Serial.println("\nBlinking!");
+		#endif
+		
 		// Close Eye Lid
 		closeEye();
 
@@ -196,6 +193,12 @@ void loop() {
 		// The largest number is (MIN_BLINK_TIME + 1) + (POT_MOD * potVal)
 		int rand_delta = random(MIN_BLINK_TIME + speed_offset, (MIN_BLINK_TIME + 1) + (POT_MOD * speed_offset));
 		
+		#ifdef DEBUG
+		Serial.print("Next Blink will be in ");
+		Serial.print(rand_delta);
+		Serial.print(" ms.\n\n");
+		#endif
+
 		next_blink_ms = millis() + rand_delta;
 	}
 }
@@ -221,7 +224,31 @@ bool timeToBlink(void) {
  * Get Potentiometer Value
  */
 int getPotVal(void) {
-	return analogRead(POT_PIN);
+	int potVal = analogRead(POT_PIN);
+
+	if (mode == CHANGE_SPEED) {
+		speed_offset = potVal;
+	}
+	if (mode == CHANGE_L_HOME) {
+		left_offset = (potVal - 512) / 32;
+	}
+	if (mode == CHANGE_R_HOME) {
+		right_offset = (potVal - 512) / 32;
+	}
+
+	#ifdef DEBUG
+	Serial.print("Speed Offset: ");
+	Serial.print(speed_offset);
+	Serial.print(", Left Offset: ");
+	Serial.print(left_offset);
+	Serial.print(", Speed Offset: ");
+	Serial.print(right_offset);
+	Serial.print(". MODE: ");
+	Serial.print(mode);
+	Serial.print("\n");
+	#endif
+
+	return potVal;
 }
 
 /**
