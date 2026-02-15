@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.2
+ * @version 1.2.3
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -327,13 +327,14 @@ void displayLEDs(void) {
 void ISR_en_btn_pressed(void) {
 	unsigned long interrupt_time = millis();
 
+	if (digitalRead(ENABLE_BTN_PIN) != BTN_PUSH_ST) {
+		return;
+	}
+
 	// If the time since the last interrupt is greater than the debounce time
 	if (interrupt_time - last_interrupt_time > DEBOUNCE_TIME) {
-		#ifdef EN_BTN_MOMENTARY
 		enable = !enable;
-		#else
-		enable = digitalRead(ENABLE_BTN_PIN) == BTN_PUSH_ST
-		#endif
+		
 		last_interrupt_time = interrupt_time;
 	}
 
