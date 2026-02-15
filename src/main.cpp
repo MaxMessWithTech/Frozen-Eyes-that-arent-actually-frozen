@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.3.0
+ * @version 1.3.1
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -29,7 +29,7 @@
 
 
 #define POT_MOD 		5				// Change how much of an effect the potenitometer has
-#define MIN_BLINK_TIME 	2000			// Minimum time between blinks
+#define MIN_BLINK_TIME 	500				// Minimum time between blinks
 
 #define CLOSED_POS 		15				// Default Closed Position in degrees
 #define OPEN_POS 		165				// Default Open Position in degrees
@@ -316,13 +316,13 @@ bool closeEye() {
 	#ifdef LEFT_SERVO_REVERSE
 		rightEye.write(OPEN_POS + left_offset);
 	#else
-		rightEye.write(CLOSE_STEPS + left_offset);
+		rightEye.write(CLOSED_POS + left_offset);
 	#endif
 
 	#ifdef RIGHT_SERVO_REVERSE
 		leftEye.write(OPEN_POS + right_offset);
 	#else
-		leftEye.write(CLOSE_STEPS + right_offset);
+		leftEye.write(CLOSED_POS + right_offset);
 	#endif
 
 	return true;
