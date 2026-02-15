@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.1
+ * @version 1.2.2
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -129,6 +129,10 @@ void setup() {
 
 	pinMode(POT_PIN, INPUT);
 
+	pinMode(SPEED_LED_PIN, OUTPUT);
+	pinMode(HOME_LED_PIN, OUTPUT);
+	pinMode(ENABLE_LED_PIN, OUTPUT);
+
 	// Set random seed using a unconected analogue pin's value
 	randomSeed(analogRead(A1));
 
@@ -204,6 +208,7 @@ void loop() {
 bool isEnabled(void) {
 	return enable;
 }
+
 
 /**
  * Is is time to blink?
