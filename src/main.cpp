@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.7
+ * @version 1.2.8
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -18,8 +18,8 @@
 #define DEBUG
 
 // PINS
-#define LEFT_EYE_PIN 	DD6				// Left Eye Servo
-#define RIGHT_EYE_PIN 	DD5				// Right Eye Servo
+#define LEFT_EYE_PIN 	DD5				// Left Eye Servo
+#define RIGHT_EYE_PIN 	DD6				// Right Eye Servo
 #define MODE_BTN_PIN 	DD3				// Mode Button
 #define ENABLE_BTN_PIN 	DD2				// Enable Button
 #define POT_PIN 		A0				// Potentiometer
@@ -48,7 +48,7 @@
 
 #define STEP_TIME 		10				// time between the loops
 #define BTN_PUSH_ST 	LOW				// Enable Button Pushed State
-#define DEBOUNCE_TIME 	100				// Button Debounce Time
+#define DEBOUNCE_TIME 	250				// Button Debounce Time
 
 // UNCOMMENT if button is momentary
 // COMMENT if button is toggle momentary
@@ -241,6 +241,8 @@ int getPotVal(void) {
 	Serial.print(speed_offset);
 	Serial.print(", Left Offset: ");
 	Serial.print(left_offset);
+	Serial.print(", Right Offset: ");
+	Serial.print(right_offset);
 	Serial.print(", Speed Offset: ");
 	Serial.print(right_offset);
 	Serial.print(". MODE: ");
@@ -318,9 +320,9 @@ bool closeEye() {
 	#endif
 
 	#ifdef RIGHT_SERVO_REVERSE
-		leftEye.write(CLOSED_POS + right_offset);
-	#else
 		leftEye.write(OPEN_POS + right_offset);
+	#else
+		leftEye.write(CLOSE_STEPS + right_offset);
 	#endif
 
 	return true;
