@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.2.3
+ * @version 1.2.4
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -154,15 +154,15 @@ void loop() {
 
 	if (!isEnabled()) { 
 		#ifdef LEFT_SERVO_REVERSE
-			rightEye.write(OPEN_POS);
+			rightEye.write(OPEN_POS + right_offset);
 		#else
-			rightEye.write(CLOSED_POS);
+			rightEye.write(CLOSED_POS + right_offset);
 		#endif
 
 		#ifdef RIGHT_SERVO_REVERSE
-			leftEye.write(OPEN_POS);
+			leftEye.write(OPEN_POS + left_offset);
 		#else
-			leftEye.write(CLOSED_POS);
+			leftEye.write(CLOSED_POS + left_offset);
 		#endif
 		return; 
 	}
