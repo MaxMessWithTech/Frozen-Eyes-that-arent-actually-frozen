@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.3.1
+ * @version 1.3.2
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
@@ -313,16 +313,16 @@ bool closeEye() {
 	}
 
 	// Fully closed
-	#ifdef LEFT_SERVO_REVERSE
-		rightEye.write(OPEN_POS + left_offset);
+	#ifdef RIGHT_SERVO_REVERSE
+		rightEye.write(OPEN_POS + right_offset);
 	#else
-		rightEye.write(CLOSED_POS + left_offset);
+		rightEye.write(CLOSED_POS + right_offset);
 	#endif
 
-	#ifdef RIGHT_SERVO_REVERSE
-		leftEye.write(OPEN_POS + right_offset);
+	#ifdef LEFT_SERVO_REVERSE
+		leftEye.write(OPEN_POS + left_offset);
 	#else
-		leftEye.write(CLOSED_POS + right_offset);
+		leftEye.write(CLOSED_POS + left_offset);
 	#endif
 
 	return true;
