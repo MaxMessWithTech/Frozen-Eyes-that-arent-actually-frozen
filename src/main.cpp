@@ -1,7 +1,7 @@
 /**
  * @name Frozen Eyes that aren't actually frozen but I like this name better
  * @author Max Miller
- * @version 1.3.2
+ * @version 1.3.3
  * @date Febuary 14th, 2026
  * @details I think my father isn't going to read this, but if he does, "hi dad..."
  */
